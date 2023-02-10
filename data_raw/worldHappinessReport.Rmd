@@ -5,36 +5,50 @@ date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
+
 ```{r setup, include=FALSE}
+# Libraries and Packages
+
 knitr::opts_chunk$set(echo = TRUE)
 
-install.packages("installr")
-install.packages("Rtools")
+library(tidyverse)
+library(dplyr)
 
 library(usethis)
 library(cli)
 library(devtools)
+library(readxl)
 ```
+
+
+# Import data
 ```{r}
-installr::updateR()
+happinessData <- read.csv("world-happiness-report.csv")
+countryData <- read.csv("country-info.csv")
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Importing and Cleaning Data
+```{r}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# import data and select wanted variables
+baseData <- read.csv("world-happiness-report.csv") %>% 
+  select(!Positive.affect) %>%
+  select(!Negative.affect) %>%
+  select(!Life.Ladder)
 
-```{r cars}
-summary(cars)
+countryData <- read.csv("country-info.csv") %>%
+  select(Country.name, Regional.indicator)
+  
+# combine data files into one data
+happinessData <- merge(baseData, countryData, by="Country.name") %>%
+  drop_na()
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+# Create RData Object Folder in Package
+```{r}
+usethis::use_data(happinessData)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
