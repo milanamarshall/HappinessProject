@@ -25,4 +25,4 @@
 #'        located in (ie residing continent)}
 #' }
 #' @source \url{https://www.kaggle.com/datasets/ajaypalsinghlo/world-happiness-report-2021}
-"HappinessProject"
+"happinessData"
